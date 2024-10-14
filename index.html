@@ -88,7 +88,7 @@
         <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
         <button onclick="toggleMainButton();">Toggle Main Button</button>
         <h1>Telegram Init Params</h1>
-        <pre id="telegramInitParams"></pre>
+        <div id="telegramInitParams"></div>
     </main>
     <div id="viewport"></div>
     <div id="viewport-params-size"></div>
@@ -162,7 +162,26 @@
             if (initParamsString) {
                 try {
                     const initParams = JSON.parse(initParamsString);
-                    initParamsElement.textContent = JSON.stringify(initParams, null, 2);
+                    const tgWebAppData = initParams.tgWebAppData;
+                    
+                    if (tgWebAppData) {
+                        const params = new URLSearchParams(tgWebAppData);
+                        let tableHTML = '<table border="1"><tr><th>Key</th><th>Value</th><th>Decoded Value</th></tr>';
+                        
+                        for (const [key, value] of params.entries()) {
+                            let decodedValue = decodeURIComponent(value);
+                            if (key === 'user') {
+                                decodedValue = JSON.parse(decodedValue);
+                                decodedValue = JSON.stringify(decodedValue, null, 2);
+                            }
+                            tableHTML += `<tr><td>${key}</td><td>${value}</td><td><pre>${decodedValue}</pre></td></tr>`;
+                        }
+                        
+                        tableHTML += '</table>';
+                        initParamsElement.innerHTML = tableHTML;
+                    } else {
+                        initParamsElement.textContent = 'No tgWebAppData found in init params';
+                    }
                 } catch (error) {
                     initParamsElement.textContent = 'Error parsing init params: ' + error.message;
                 }
