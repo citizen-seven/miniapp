@@ -59,6 +59,41 @@
         #viewport-params-expand {
             top: 30px;
         }
+
+        /* New styles for the table */
+        #telegramInitParams table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+            background-color: var(--tg-theme-bg-color);
+        }
+
+        #telegramInitParams th, 
+        #telegramInitParams td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--tg-theme-hint-color);
+        }
+
+        #telegramInitParams th {
+            background-color: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-text-color);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        #telegramInitParams tr:hover {
+            background-color: var(--tg-theme-secondary-bg-color);
+        }
+
+        #telegramInitParams td pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            font-family: monospace;
+        }
     </style>
 </head>
 
@@ -166,7 +201,7 @@
                     
                     if (tgWebAppData) {
                         const params = new URLSearchParams(tgWebAppData);
-                        let tableHTML = '<table border="1"><tr><th>Key</th><th>Value</th><th>Decoded Value</th></tr>';
+                        let tableHTML = '<table><thead><tr><th>Key</th><th>Value</th><th>Decoded Value</th></tr></thead><tbody>';
                         
                         for (const [key, value] of params.entries()) {
                             let decodedValue = decodeURIComponent(value);
@@ -177,7 +212,7 @@
                             tableHTML += `<tr><td>${key}</td><td><pre>${decodedValue}</pre></td></tr>`;
                         }
                         
-                        tableHTML += '</table>';
+                        tableHTML += '</tbody></table>';
                         initParamsElement.innerHTML = tableHTML;
                     } else {
                         initParamsElement.textContent = 'No tgWebAppData found in init params';
