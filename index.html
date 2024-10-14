@@ -87,6 +87,8 @@
         <h1>Buttons</h1>
         <button onclick="Telegram.WebApp.expand();">Expand Webview</button>
         <button onclick="toggleMainButton();">Toggle Main Button</button>
+        <h1>Telegram Init Params</h1>
+        <pre id="telegramInitParams"></pre>
     </main>
     <div id="viewport"></div>
     <div id="viewport-params-size"></div>
@@ -152,6 +154,25 @@
         Telegram.WebApp.onEvent('themeChanged', function() {
             document.body.setAttribute('style', '--bg-color:' + Telegram.WebApp.backgroundColor);
         });
+
+        function displayTelegramInitParams() {
+            const initParamsString = sessionStorage.getItem('__telegram__initParams');
+            const initParamsElement = document.getElementById('telegramInitParams');
+            
+            if (initParamsString) {
+                try {
+                    const initParams = JSON.parse(initParamsString);
+                    initParamsElement.textContent = JSON.stringify(initParams, null, 2);
+                } catch (error) {
+                    initParamsElement.textContent = 'Error parsing init params: ' + error.message;
+                }
+            } else {
+                initParamsElement.textContent = 'No __telegram__initParams found in session storage';
+            }
+        }
+
+        // Call the function when the page loads
+        displayTelegramInitParams();
 
     </script>
 
